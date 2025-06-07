@@ -83,6 +83,12 @@ namespace LargeXmlToJsonConverter
             while (await reader.ReadAsync().ConfigureAwait(false))
             {
                 ct.ThrowIfCancellationRequested();
+
+                if (options.NodeConverter != null && await options.NodeConverter(reader, writer, ct).ConfigureAwait(false))
+                {
+                    continue;
+                }
+
                 switch (reader.NodeType)
                 {
                     case XmlNodeType.Element:
